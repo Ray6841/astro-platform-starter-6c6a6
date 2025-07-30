@@ -1,0 +1,14 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navigation from '../components/Navigation';
+import EquipmentManagement from '../components/EquipmentManagement';
+---
+
+<Layout title="Equipment Management - WMS Pro">
+  <div class="min-h-screen bg-gray-50">
+    <Navigation client:load />
+    <main>
+      <EquipmentManagement client:load />
+    </main>
+  </div>
+</Layout>

@@ -18,6 +18,8 @@ const Navigation: React.FC<NavigationProps> = ({ user, onLogout }) => {
     { name: 'Orders', href: '/orders', icon: '📋' },
     { name: 'Receiving', href: '/receiving', icon: '📥' },
     { name: 'Tasks', href: '/tasks', icon: '✅' },
+    { name: 'Labor', href: '/labor', icon: '👥' },
+    { name: 'Equipment', href: '/equipment', icon: '🔧' },
     { name: 'Billing', href: '/billing', icon: '💰' },
     { name: 'Reports', href: '/reports', icon: '📈' },
   ];

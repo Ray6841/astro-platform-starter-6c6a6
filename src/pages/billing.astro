@@ -1,43 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Navigation from '../components/Navigation';
+import BillingList from '../components/BillingList';
 ---
 
 <Layout title="Billing - WMS Pro">
   <div class="min-h-screen bg-gray-50">
     <Navigation client:load />
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Billing & 3PL</h1>
-        <p class="mt-2 text-gray-600">3PL billing, cost tracking, and invoice management</p>
-      </div>
-      
-      <div class="bg-white shadow rounded-lg p-6">
-        <div class="text-center">
-          <div class="text-6xl mb-4">💰</div>
-          <h2 class="text-2xl font-bold text-gray-900 mb-2">3PL Billing Management</h2>
-          <p class="text-gray-600 mb-6">Comprehensive billing and cost tracking for third-party logistics</p>
-          
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div class="bg-blue-50 p-6 rounded-lg">
-              <h3 class="text-lg font-semibold text-blue-900 mb-2">Storage Billing</h3>
-              <p class="text-blue-700 text-sm">Per-unit and per-pallet storage charges</p>
-            </div>
-            <div class="bg-green-50 p-6 rounded-lg">
-              <h3 class="text-lg font-semibold text-green-900 mb-2">Handling Fees</h3>
-              <p class="text-green-700 text-sm">Order processing and handling charges</p>
-            </div>
-            <div class="bg-yellow-50 p-6 rounded-lg">
-              <h3 class="text-lg font-semibold text-yellow-900 mb-2">Value-Added Services</h3>
-              <p class="text-yellow-700 text-sm">Special packaging and custom services</p>
-            </div>
-            <div class="bg-purple-50 p-6 rounded-lg">
-              <h3 class="text-lg font-semibold text-purple-900 mb-2">Invoice Generation</h3>
-              <p class="text-purple-700 text-sm">Automated billing cycles and reporting</p>
-            </div>
-          </div>
-        </div>
-      </div>
+    <main>
+      <BillingList client:load />
     </main>
   </div>
 </Layout>

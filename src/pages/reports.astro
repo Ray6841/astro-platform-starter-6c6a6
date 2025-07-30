@@ -1,0 +1,51 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navigation from '../components/Navigation';
+---
+
+<Layout title="Reports - WMS Pro">
+  <div class="min-h-screen bg-gray-50">
+    <Navigation client:load />
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">Reports & Analytics</h1>
+        <p class="mt-2 text-gray-600">Comprehensive reporting and KPI dashboards</p>
+      </div>
+      
+      <div class="bg-white shadow rounded-lg p-6">
+        <div class="text-center">
+          <div class="text-6xl mb-4">📈</div>
+          <h2 class="text-2xl font-bold text-gray-900 mb-2">Analytics & Reporting</h2>
+          <p class="text-gray-600 mb-6">Real-time KPIs, performance metrics, and operational insights</p>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="bg-blue-50 p-6 rounded-lg">
+              <h3 class="text-lg font-semibold text-blue-900 mb-2">Performance KPIs</h3>
+              <p class="text-blue-700 text-sm">Throughput, accuracy, and cycle time metrics</p>
+            </div>
+            <div class="bg-green-50 p-6 rounded-lg">
+              <h3 class="text-lg font-semibold text-green-900 mb-2">Inventory Reports</h3>
+              <p class="text-green-700 text-sm">Stock levels, movements, and valuation</p>
+            </div>
+            <div class="bg-yellow-50 p-6 rounded-lg">
+              <h3 class="text-lg font-semibold text-yellow-900 mb-2">Labor Analytics</h3>
+              <p class="text-yellow-700 text-sm">Productivity and efficiency tracking</p>
+            </div>
+            <div class="bg-purple-50 p-6 rounded-lg">
+              <h3 class="text-lg font-semibold text-purple-900 mb-2">Financial Reports</h3>
+              <p class="text-purple-700 text-sm">Billing summaries and cost analysis</p>
+            </div>
+            <div class="bg-indigo-50 p-6 rounded-lg">
+              <h3 class="text-lg font-semibold text-indigo-900 mb-2">Audit Logs</h3>
+              <p class="text-indigo-700 text-sm">Transaction history and compliance</p>
+            </div>
+            <div class="bg-pink-50 p-6 rounded-lg">
+              <h3 class="text-lg font-semibold text-pink-900 mb-2">Custom Reports</h3>
+              <p class="text-pink-700 text-sm">Configurable reports and exports</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</Layout>

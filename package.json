@@ -1,7 +1,8 @@
 {
-  "name": "astro-netlify-platform-starter",
+  "name": "wms-pro",
   "type": "module",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "description": "Comprehensive Warehouse Management System",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",

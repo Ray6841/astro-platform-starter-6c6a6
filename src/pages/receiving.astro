@@ -1,14 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Navigation from '../components/Navigation';
-import Dashboard from '../components/Dashboard';
+import ReceivingList from '../components/ReceivingList';
 ---
 
-<Layout title="Dashboard - WMS Pro">
+<Layout title="Receiving - WMS Pro">
   <div class="min-h-screen bg-gray-50">
     <Navigation client:load />
     <main>
-      <Dashboard client:load />
+      <ReceivingList client:load />
     </main>
   </div>
 </Layout>

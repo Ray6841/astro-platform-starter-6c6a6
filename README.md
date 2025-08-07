@@ -278,3 +278,68 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 **WMS Pro** - Empowering warehouse operations with modern technology and comprehensive management capabilities.
+
+## Warehouse Management System (WMS)
+
+Stack: React (Vite + TS + Tailwind), Express (TS), PostgreSQL (Prisma), Docker.
+
+### Quick start (Docker)
+1. Copy environment examples:
+   - `cp backend/.env.example backend/.env`
+   - Edit `backend/.env` as needed (JWT_SECRET)
+2. Build and run:
+   - `docker compose up --build`
+3. App: `http://localhost:5173` (frontend). API docs: `http://localhost:4000/api/docs`.
+
+### Local development
+- Backend: `cd backend && npm i && npx prisma generate && npm run dev`
+- Frontend: `cd frontend && npm i && npm run dev`
+
+### API
+- Swagger UI at `/api/docs`
+
+### Database ER Diagram (Mermaid)
+```mermaid
+erDiagram
+  User ||--o{ AuditLog : writes
+  Supplier ||--o{ Part : provides
+  Part ||--o{ OrderItem : used_in
+  Order ||--o{ OrderItem : contains
+
+  User {
+    string id PK
+    string email
+    string passwordHash
+    enum role
+  }
+  Supplier {
+    string id PK
+    string name
+    string contact
+  }
+  Part {
+    string id PK
+    string partNumber
+    string barcode
+    int quantityInStock
+    decimal unitCost
+    int reorderLevel
+  }
+  Order {
+    string id PK
+    string customer
+    string status
+  }
+  OrderItem {
+    string id PK
+    string orderId FK
+    string partId FK
+    int quantity
+  }
+  AuditLog {
+    string id PK
+    string userId FK
+    string action
+    string entity
+  }
+```

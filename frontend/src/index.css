@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+/* Custom globals */
+:root {
+  --sidebar-width: 240px;
+}
+
+html, body, #root {
+  height: 100%;
+}

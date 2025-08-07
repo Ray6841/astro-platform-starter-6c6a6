@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  STAFF
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(STAFF)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  auditLogs    AuditLog[]
+}
+
+model Supplier {
+  id        String   @id @default(uuid())
+  name      String
+  contact   String?
+  email     String?
+  phone     String?
+  parts     Part[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Part {
+  id               String   @id @default(uuid())
+  partNumber       String
+  awtPartNumber    String?
+  description      String?
+  size             String?
+  material         String?
+  category         String?
+  binNumber        String?
+  location         String?
+  unit             String?
+  quantityInStock  Int      @default(0)
+  toOrderExcess    String?
+  unitCost         Decimal  @default(0)
+  inventoryValue   Decimal  @default(0)
+  reorderLevel     Int      @default(0)
+  leadTimeDays     Int      @default(0)
+  barcode          String   @unique
+  supplierId       String?
+  supplier         Supplier? @relation(fields: [supplierId], references: [id])
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  orderItems       OrderItem[]
+
+  @@index([partNumber])
+  @@index([barcode])
+}
+
+model Order {
+  id         String      @id @default(uuid())
+  customer   String
+  status     String      @default("PENDING")
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  items      OrderItem[]
+}
+
+model OrderItem {
+  id        String   @id @default(uuid())
+  orderId   String
+  partId    String
+  quantity  Int
+  unitPrice Decimal @default(0)
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  part      Part    @relation(fields: [partId], references: [id])
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  action    String
+  entity    String
+  entityId  String?
+  details   Json?
+  createdAt DateTime @default(now())
+}

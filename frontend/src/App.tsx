@@ -8,6 +8,10 @@ import Login from './pages/Login'
 import PickList from './pages/PickList'
 import Scan from './pages/Scan'
 import Reports from './pages/Reports'
+import Intake from './pages/Intake'
+import Projects from './pages/Projects'
+import Suppliers360 from './pages/Suppliers360'
+import Categories from './pages/Categories'
 
 function ProtectedRoute({ children, roles }: { children: React.ReactElement, roles?: Array<'ADMIN'|'MANAGER'|'STAFF'> }) {
   const { token, user } = useAuthStore()
@@ -28,6 +32,10 @@ function Sidebar() {
         <Link to="/orders" className="hover:bg-gray-800 rounded px-3 py-2">Orders</Link>
         <Link to="/scan" className="hover:bg-gray-800 rounded px-3 py-2">Scan</Link>
         <Link to="/reports" className="hover:bg-gray-800 rounded px-3 py-2">Reports</Link>
+        <Link to="/intake" className="hover:bg-gray-800 rounded px-3 py-2">Intake</Link>
+        <Link to="/projects" className="hover:bg-gray-800 rounded px-3 py-2">Projects</Link>
+        <Link to="/suppliers360" className="hover:bg-gray-800 rounded px-3 py-2">Suppliers</Link>
+        <Link to="/categories" className="hover:bg-gray-800 rounded px-3 py-2">Categories</Link>
         <a href="/api/docs" className="hover:bg-gray-800 rounded px-3 py-2">API Docs</a>
       </nav>
       {user && (
@@ -59,6 +67,10 @@ export default function App() {
       <Route path="/orders/:id/picklist" element={<ProtectedRoute roles={['ADMIN','MANAGER','STAFF']}><Layout><PickList /></Layout></ProtectedRoute>} />
       <Route path="/scan" element={<ProtectedRoute roles={['ADMIN','MANAGER','STAFF']}><Layout><Scan /></Layout></ProtectedRoute>} />
       <Route path="/reports" element={<ProtectedRoute roles={['ADMIN','MANAGER']}><Layout><Reports /></Layout></ProtectedRoute>} />
+      <Route path="/intake" element={<ProtectedRoute roles={['ADMIN','MANAGER','STAFF']}><Layout><Intake /></Layout></ProtectedRoute>} />
+      <Route path="/projects" element={<ProtectedRoute roles={['ADMIN','MANAGER']}><Layout><Projects /></Layout></ProtectedRoute>} />
+      <Route path="/suppliers360" element={<ProtectedRoute roles={['ADMIN','MANAGER']}><Layout><Suppliers360 /></Layout></ProtectedRoute>} />
+      <Route path="/categories" element={<ProtectedRoute roles={['ADMIN','MANAGER']}><Layout><Categories /></Layout></ProtectedRoute>} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   )

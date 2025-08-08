@@ -13,6 +13,25 @@ enum Role {
   STAFF
 }
 
+model Tenant {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  users     User[]
+  // Back-relations for procurement
+  intakeForms         IntakeForm[]
+  requests            Request[]
+  approvals           Approval[]
+  workflowDefinitions WorkflowDefinition[]
+  workflowInstances   WorkflowInstance[]
+  tasks               Task[]
+  projects            Project[]
+  categories          Category[]
+  spendTransactions   SpendTransaction[]
+  connectors          Connector[]
+  webhookSubscriptions WebhookSubscription[]
+}
+
 model User {
   id           String   @id @default(uuid())
   email        String   @unique
@@ -21,6 +40,11 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   auditLogs    AuditLog[]
+  // Procurement additions
+  tenantId     String?
+  tenant       Tenant?   @relation(fields: [tenantId], references: [id])
+  department   String?
+  region       String?
 }
 
 model Supplier {
@@ -32,6 +56,16 @@ model Supplier {
   parts     Part[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  // Procurement extensions
+  duns            String?
+  taxId           String?
+  primaryCategory String?
+  region          String?
+  esgScore        Float?
+  diversityFlags  Json?
+  riskScore       Float?
+  // Back-relations
+  spendTransactions SpendTransaction[]
 }
 
 model Part {
@@ -90,4 +124,170 @@ model AuditLog {
   entityId  String?
   details   Json?
   createdAt DateTime @default(now())
+  // Procurement additions
+  tenantId  String?
+}
+
+// Procurement core models
+model IntakeForm {
+  id         String   @id @default(uuid())
+  tenantId   String
+  tenant     Tenant   @relation(fields: [tenantId], references: [id])
+  title      String
+  schema     Json
+  uiSchema   Json?
+  version    Int      @default(1)
+  createdBy  String?
+  createdAt  DateTime @default(now())
+  // Back-relations
+  requests   Request[]
+}
+
+model Request {
+  id              String   @id @default(uuid())
+  tenantId        String
+  tenant          Tenant   @relation(fields: [tenantId], references: [id])
+  formId          String?
+  form            IntakeForm? @relation(fields: [formId], references: [id])
+  data            Json
+  status          String   @default("submitted")
+  region          String?
+  department      String?
+  estimatedSpend  Decimal? @db.Decimal(18,2)
+  riskScore       Float?
+  requesterId     String?
+  assigneeId      String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  approvals       Approval[]
+  // Back-relations
+  tasks           Task[]
+  projects        Project[]
+}
+
+model Approval {
+  id         String   @id @default(uuid())
+  tenantId   String
+  tenant     Tenant   @relation(fields: [tenantId], references: [id])
+  requestId  String
+  request    Request  @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  stepName   String
+  approverId String?
+  outcome    String   @default("pending")
+  comment    String?
+  decidedAt  DateTime?
+}
+
+model WorkflowDefinition {
+  id         String   @id @default(uuid())
+  tenantId   String
+  tenant     Tenant   @relation(fields: [tenantId], references: [id])
+  name       String
+  version    Int
+  definition Json
+  isActive   Boolean  @default(false)
+
+  @@unique([tenantId, name, version])
+  // Back-relations
+  instances  WorkflowInstance[]
+}
+
+model WorkflowInstance {
+  id            String   @id @default(uuid())
+  tenantId      String
+  tenant        Tenant   @relation(fields: [tenantId], references: [id])
+  definitionId  String
+  definition    WorkflowDefinition @relation(fields: [definitionId], references: [id])
+  status        String
+  context       Json
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  tasks         Task[]
+}
+
+model Task {
+  id                  String   @id @default(uuid())
+  tenantId            String
+  tenant              Tenant   @relation(fields: [tenantId], references: [id])
+  workflowInstanceId  String?
+  workflowInstance    WorkflowInstance? @relation(fields: [workflowInstanceId], references: [id])
+  requestId           String?
+  request             Request? @relation(fields: [requestId], references: [id])
+  projectId           String?
+  project             Project? @relation(fields: [projectId], references: [id])
+  type                String
+  name                String
+  assigneeId          String?
+  status              String   @default("open")
+  outcome             String?
+  dueAt               DateTime?
+  createdAt           DateTime @default(now())
+  completedAt         DateTime?
+}
+
+model Project {
+  id             String   @id @default(uuid())
+  tenantId       String
+  tenant         Tenant   @relation(fields: [tenantId], references: [id])
+  requestId      String?
+  request        Request? @relation(fields: [requestId], references: [id])
+  name           String
+  ownerId        String?
+  status         String   @default("not_started")
+  baselineSavings Decimal? @db.Decimal(18,2)
+  actualSavings   Decimal? @db.Decimal(18,2)
+  startDate      DateTime?
+  endDate        DateTime?
+  createdAt      DateTime @default(now())
+  // Back-relations
+  tasks          Task[]
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  name      String
+  parentId  String?
+  parent    Category? @relation("CategoryToCategory", fields: [parentId], references: [id])
+  ownerId   String?
+  children  Category[] @relation("CategoryToCategory")
+  // Back-relations
+  spendTransactions SpendTransaction[]
+}
+
+model SpendTransaction {
+  id           String   @id @default(uuid())
+  tenantId     String
+  tenant       Tenant   @relation(fields: [tenantId], references: [id])
+  supplierId   String?
+  supplier     Supplier? @relation(fields: [supplierId], references: [id])
+  categoryId   String?
+  category     Category? @relation(fields: [categoryId], references: [id])
+  projectId    String?
+  amount       Decimal  @db.Decimal(18,2)
+  currency     String?
+  txDate       DateTime
+  sourceSystem String?
+  externalId   String?
+}
+
+model Connector {
+  id         String   @id @default(uuid())
+  tenantId   String
+  tenant     Tenant   @relation(fields: [tenantId], references: [id])
+  provider   String
+  auth       Json
+  settings   Json?
+  status     String   @default("connected")
+}
+
+model WebhookSubscription {
+  id         String   @id @default(uuid())
+  tenantId   String
+  tenant     Tenant   @relation(fields: [tenantId], references: [id])
+  eventType  String
+  targetUrl  String
+  secret     String
+  isActive   Boolean  @default(true)
 }
